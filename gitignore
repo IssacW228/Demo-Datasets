@@ -1,0 +1,30 @@
+# ── Video files (large binary, use Git LFS or external storage) ──
+# 视频文件（体积大，建议使用 Git LFS 或外部存储）
+*.avi
+*.mp4
+*.mov
+
+# ── Input data and generated outputs (keep directory, ignore contents) ──
+# 输入数据与生成产物（保留目录但忽略内容）
+data/*
+!data/.gitkeep
+results/*
+!results/.gitkeep
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+.ipynb_checkpoints/
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
