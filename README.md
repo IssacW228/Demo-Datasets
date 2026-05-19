@@ -293,15 +293,3 @@ The specification covers the full mathematical formulation of the pipeline, incl
 
 算法说明文档包含流水线的完整数学表述，以及近距离对比例中以中位数限制分母的形式化定义。
 
----
-
-## Notes for GitHub Hosting / GitHub 托管注意事项
-
-- **Video files (`*.avi`)** are excluded from version control (see `.gitignore`). They typically exceed GitHub's 25 MB soft limit per file. Options for sharing:
-  - Use **Git LFS**: `git lfs track "*.avi"` then commit normally
-  - Host on Google Drive / OSF / Zenodo and link from this README
-- 视频文件不入库，因单文件常超过 GitHub 25 MB 软上限。可选方案：
-  - 使用 **Git LFS** 追踪 `*.avi`
-  - 上传至 Google Drive / OSF / Zenodo 并在 README 中附链接
-- **Generated outputs** (`results/`) are also gitignored. They are reproducible from `src/` + `data/`.
-- 生成产物（`results/`）同样不入库，可由 `src/` + `data/` 重新生成。
