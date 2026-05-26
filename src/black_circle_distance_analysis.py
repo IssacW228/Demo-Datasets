@@ -207,6 +207,12 @@ def main(video_filename):
         writer = csv.writer(f)
         writer.writerow(['Frame', 'Close_Pairs_Ratio(%, deno=median)'])
 
+    # Binary video output / Binary 视频输出
+    binary_video_path = f"{video_name}_binary.avi"
+    binary_out = cv2.VideoWriter(binary_video_path, 
+                                 cv2.VideoWriter_fourcc(*'XVID'), 
+                                 original_fps, (width, height), isColor=False)
+
     print(f"原始视频帧率 / Native frame rate: {original_fps:.1f} fps")
 
     # Playback rate decoupled from native rate for interactive inspection
@@ -270,6 +276,9 @@ def main(video_filename):
                 writer = csv.writer(f)
                 writer.writerow([frame_count, round(close_pairs_ratio, 4)])
 
+            # Write Binary video / 写入 Binary 视频
+            binary_out.write(binary)
+
             cv2.imshow("Original", frame)
             cv2.imshow("Gray", gray)
             cv2.imshow("Binary", binary)
@@ -300,6 +309,7 @@ def main(video_filename):
             max_area = max(100, max_area - 100)
             print(f"max area = {max_area}")
 
+    binary_out.release()
     cap.release()
     cv2.destroyAllWindows()
 
@@ -307,6 +317,7 @@ def main(video_filename):
     print(f"逐帧最短距离 / per-frame min distance: {min_distance_csv}")
     print(f"距离统计汇总 / distance statistics:    {stats_csv}")
     print(f"近距离对比例 / close-pair ratio:       {close_pairs_csv}")
+    print(f"Binary 视频 / Binary video:            {binary_video_path}")
 
 
 if __name__ == "__main__":
