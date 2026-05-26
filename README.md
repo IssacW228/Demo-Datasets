@@ -58,17 +58,19 @@ med_cv_project/
 │       │   ├── min_distance.csv
 │       │   ├── distance_stats.csv
 │       │   └── close_pairs_ratio.csv
-│       └── png/
-│           ├── max_distance.png
-│           ├── min_distance.png
-│           ├── mean_distance.png
-│           ├── median_distance.png
-│           └── close_pairs_ratio.png
+│       ├── png/
+│       │   ├── max_distance.png
+│       │   ├── min_distance.png
+│       │   ├── mean_distance.png
+│       │   ├── median_distance.png
+│       │   └── close_pairs_ratio.png
+│       └── binary.avi                # Post-morphological binary mask sequence
+│                                     # 经形态学精修后的二值掩码序列
 │
 ├── docs/                             # Documentation / 文档
 │   ├── Particle_Detection_Algorithm_Specification_Compact.docx
 │   │                                 # Algorithm specification (EN) / 算法说明文档
-│   └── 算法实现思路.png               # Pipeline diagram / 流水线架构图
+│   └── Pipeline_Diagram.png          # Pipeline diagram / 流水线架构图
 │
 ├── .gitignore
 └── README.md
@@ -260,6 +262,7 @@ For each video `<video_name>`, the pipeline produces the following under `result
 | `csv/close_pairs_ratio.csv` | `Frame, Ratio(%, deno=median)` | Proportion of pairs with *d* < 3 μm, denominator = pairs with *d* ≤ *d*<sub>median</sub> / 近距离对比例 |
 | `png/{max,min,mean,median}_distance.png` | Scatter plot vs frame index | Distance trajectory plots / 距离时序散点图 |
 | `png/close_pairs_ratio.png` | Scatter plot vs frame index | Aggregation tendency over time / 聚集趋势时序图 |
+| `binary.avi` *(control only)* | XVID-encoded grayscale video | Post-morphological binary mask sequence / 经形态学精修后的二值掩码序列 |
 | `annotated.avi` *(experimental only)* | XVID-encoded video | Full pipeline visualisation / 全流水线可视化 |
 | `white_circles.avi` *(experimental only)* | XVID-encoded video | Extracted particle mask / 颗粒掩码 |
 
@@ -293,3 +296,15 @@ The specification covers the full mathematical formulation of the pipeline, incl
 
 算法说明文档包含流水线的完整数学表述，以及近距离对比例中以中位数限制分母的形式化定义。
 
+---
+
+## Notes for GitHub Hosting / GitHub 托管注意事项
+
+- **Video files (`*.avi`)** are excluded from version control (see `.gitignore`). They typically exceed GitHub's 25 MB soft limit per file. Options for sharing:
+  - Use **Git LFS**: `git lfs track "*.avi"` then commit normally
+  - Host on Google Drive / OSF / Zenodo and link from this README
+- 视频文件不入库，因单文件常超过 GitHub 25 MB 软上限。可选方案：
+  - 使用 **Git LFS** 追踪 `*.avi`
+  - 上传至 Google Drive / OSF / Zenodo 并在 README 中附链接
+- **Generated outputs** (`results/`) are also gitignored. They are reproducible from `src/` + `data/`.
+- 生成产物（`results/`）同样不入库，可由 `src/` + `data/` 重新生成。
