@@ -162,11 +162,15 @@ def process_frame(frame, threshold=127, min_area=20, max_area=1000):
 def main(video_filename):
     """
     Driver: decode the control-group video frame-by-frame, apply the
-    per-frame pipeline, and persist per-frame minimum distance, summary
-    statistics, and close-pair ratio under results/<video_name>/csv/.
+    per-frame pipeline, persist per-frame minimum distance, summary
+    statistics, and close-pair ratio under results/<video_name>/csv/,
+    and export the post-morphological binary mask sequence as
+    results/<video_name>/binary.avi for offline inspection.
 
-    主程序：逐帧解码对照组视频，应用单帧流水线，并将逐帧最短距离、
-    统计指标汇总及近距离对比例写入 results/<视频名>/csv/ 目录。
+    主程序：逐帧解码对照组视频，应用单帧流水线，将逐帧最短距离、
+    统计指标汇总及近距离对比例写入 results/<视频名>/csv/ 目录；同时
+    将经形态学精修后的二值掩码序列导出为 results/<视频名>/binary.avi
+    以便离线检视。
 
     Parameters:
         video_filename : str — filename inside DATA_DIR (e.g. "对照.avi")
@@ -207,11 +211,16 @@ def main(video_filename):
         writer = csv.writer(f)
         writer.writerow(['Frame', 'Close_Pairs_Ratio(%, deno=median)'])
 
-    # Binary video output / Binary 视频输出
-    binary_video_path = f"{video_name}_binary.avi"
-    binary_out = cv2.VideoWriter(binary_video_path, 
-                                 cv2.VideoWriter_fourcc(*'XVID'), 
-                                 original_fps, (width, height), isColor=False)
+    # Binary mask video output (grayscale): writes the post-morphological
+    # binary mask for each processed frame, enabling offline inspection
+    # of the detection input that drives contour extraction.
+    # 二值掩码视频输出（灰度）：将每帧经形态学精修后的二值掩码写入视频，
+    # 便于离线检视驱动轮廓提取的检测输入。
+    binary_video_path = output_root / "binary.avi"
+    binary_out = cv2.VideoWriter(str(binary_video_path),
+                                 cv2.VideoWriter_fourcc(*'XVID'),
+                                 original_fps, (width, height),
+                                 isColor=False)
 
     print(f"原始视频帧率 / Native frame rate: {original_fps:.1f} fps")
 
@@ -276,7 +285,8 @@ def main(video_filename):
                 writer = csv.writer(f)
                 writer.writerow([frame_count, round(close_pairs_ratio, 4)])
 
-            # Write Binary video / 写入 Binary 视频
+            # Persist binary mask frame to the output video
+            # 将二值掩码帧写入输出视频
             binary_out.write(binary)
 
             cv2.imshow("Original", frame)
@@ -309,15 +319,15 @@ def main(video_filename):
             max_area = max(100, max_area - 100)
             print(f"max area = {max_area}")
 
-    binary_out.release()
     cap.release()
+    binary_out.release()
     cv2.destroyAllWindows()
 
     print(f"处理完成 / Processing complete: {frame_count} frames")
     print(f"逐帧最短距离 / per-frame min distance: {min_distance_csv}")
     print(f"距离统计汇总 / distance statistics:    {stats_csv}")
     print(f"近距离对比例 / close-pair ratio:       {close_pairs_csv}")
-    print(f"Binary 视频 / Binary video:            {binary_video_path}")
+    print(f"二值掩码视频 / binary mask video:      {binary_video_path}")
 
 
 if __name__ == "__main__":
